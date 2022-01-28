@@ -1,0 +1,5 @@
+{
+    "extends": [
+        "server/node_modules/@calme1709/back-end-config/.eslintrc.js"
+    ]
+}
