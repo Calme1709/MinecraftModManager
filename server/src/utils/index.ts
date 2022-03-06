@@ -1,4 +1,4 @@
 export { default as ControlledError } from "./controlledError";
-export { default as Database } from "./database";
+export { default as Cache } from "./cache";
 
 export * from "./response";

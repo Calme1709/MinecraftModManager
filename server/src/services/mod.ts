@@ -1,17 +1,17 @@
-import { ModModel, ModLocation } from "models";
-import { Octokit } from "@octokit/core";
 import https from "https";
 import fs from "fs";
 import { execSync } from "child_process";
 import os from "os";
-import { ControlledError } from "@utils";
+import { RepositoryService } from "@services";
+import { ControlledError, Cache } from "@utils";
 import getConfig from "@config";
+import { ModLocationType, ModLocation } from "./repository";
 
-export interface ICurseForgeModFileListResponse {
+interface ICurseForgeModFileListResponse {
 	data: IFile[];
 }
 
-export interface IFile {
+interface IFile {
 	fileDate: string;
 	downloadUrl: string;
 	gameVersions: string[];
@@ -25,11 +25,17 @@ export interface IFile {
  */
 const minorVersion = (version: string) => version.split(".").slice(0, 2).join(".");
 
+interface ILatestVersion {
+	version: string;
+	downloadUrl: string;
+}
+
 /**
  * The mod service, handles all interactions with mods.
  */
 export default class ModService {
-	private static readonly octokit = new Octokit();
+	private static cacheTimeout = 3600000;
+	private static latestVersionCache = new Cache<ILatestVersion>(this.cacheTimeout);
 
 	/**
 	 * Get the latest version of a mod according to it's name.
@@ -39,57 +45,41 @@ export default class ModService {
 	 * @returns The latest version of the mod that is available.
 	 */
 	public static async getLatestVersion(minecraftVersion: string, modName: string) {
-		console.log(`Getting latest version information for ${modName}`);
-		const mod = await ModModel.getMod(modName).catch(err => {
-			throw err;
-		});
+		const cacheKey = `${minecraftVersion}-${modName}`;
+		const cacheEntry = this.latestVersionCache.get(cacheKey);
 
-		if(mod.data.cacheTime + (await getConfig()).cacheLength < Date.now()) {
-			let latestVersion: { version: string; downloadUrl: string };
-
-			switch (mod.data.remoteLocation.type) {
-				case ModLocation.GITHUB:
-					latestVersion = await this.fetchLatestVersionFromGithub(
-						mod.data.remoteLocation.owner,
-						mod.data.remoteLocation.repo,
-						mod.data.remoteLocation.assetNumber
-					);
-					break;
-				case ModLocation.CURSEFORGE:
-					latestVersion = await this.fetchLatestVersionFromCurseForge(minecraftVersion, mod.data.remoteLocation.id);
-					break;
-				default:
-					throw new Error(`Unsupported remote location for mod ${modName}`);
-			}
-
-			mod.data.latestVersion = latestVersion;
-			mod.data.cacheTime = Date.now();
-
-			await mod.save();
+		if (cacheEntry !== null) {
+			return cacheEntry;
 		}
 
-		return mod.data.latestVersion;
+		const modLocation = await RepositoryService.getModLocation(modName);
+
+		if (modLocation === undefined) {
+			throw new ControlledError(404, 'Mod not in repository');
+		}
+
+		const latestVersion = await this.fetchLatestVersionFromRemoteLocation(modName, minecraftVersion, modLocation);
+
+		this.latestVersionCache.set(cacheKey, latestVersion);
+
+		return latestVersion;
 	}
 
 	/**
-	 * Get the most recent version from github.
-	 *
-	 * @param owner - The owner of the github repository.
-	 * @param repo - The name of the github repository.
-	 * @param assetNumber - The index of the mod .jar in the assets.
-	 * @returns The latest version available.
+	 * Fetch the latest version from the corresponding remote location.
+	 * @param modName - The name of the mod
+	 * @param minecraftVersion - The version of minecraft to get the mod for
+	 * @param modLocation - The mod location object
+	 * @returns - The latest version of the mod and a download link for it
 	 */
-	private static async fetchLatestVersionFromGithub(owner: string, repo: string, assetNumber: number) {
-		const releaseData = await this.octokit.request("GET /repos/{owner}/{repo}/releases", {
-			owner,
-			repo
-		});
-
-		const downloadUrl = releaseData.data[0].assets[assetNumber].browser_download_url;
-
-		const version = await this.fetchVersionFromDownloadUrl(downloadUrl);
-
-		return { version, downloadUrl };
+	private static fetchLatestVersionFromRemoteLocation(modName: string, minecraftVersion: string, modLocation: ModLocation) {
+		switch (modLocation.type) {
+			case ModLocationType.CURSEFORGE:
+				return this.fetchLatestVersionFromCurseForge(minecraftVersion, modLocation.id);
+				break;
+			default:
+				throw new Error(`Unsupported remote location for mod ${modName}`);
+		}
 	}
 
 	/**

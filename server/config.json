@@ -1,7 +1,6 @@
 {
-    "databaseLocation": "/opt/mod_manager/database.json",
+    "repositoryLocation": "/opt/mod_manager/repository.json",
     "curseForgeApiKey": "<curseforge_api_key>",
-    "cacheLength": 3600000,
     "ports": {
         "httpServer": 8080
     }

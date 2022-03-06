@@ -38,6 +38,6 @@ router.get("/client", (_, res) => {
 	res.download(`/opt/mod_manager/mod-manager.py`);
 })
 
-router.get("/", ({}, res) => res.send("hello"));
+router.get("/", ({}, res) => res.send("Minecraft Mod Manager"));
 
 export default router;

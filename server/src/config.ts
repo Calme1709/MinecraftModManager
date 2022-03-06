@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 
 interface IConfig {
-    databaseLocation: string;
+    repositoryLocation: string;
     curseForgeApiKey: string;
     cacheLength: number;
     ports: {
