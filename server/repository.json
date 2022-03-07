@@ -82,5 +82,9 @@
     "shulkerboxtooltip": {
         "type": 1,
         "id": "315811"
+    },
+    "borderlessmining": {
+        "type": 1,
+        "id": "310205"
     }
 }
