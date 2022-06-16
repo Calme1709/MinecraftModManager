@@ -107,7 +107,7 @@ export default class ModService {
 		});
 
 		const filteredFiles = response.data
-			.filter(file => file.gameVersions.includes("Fabric") && (file.gameVersions.includes(minecraftVersion) || file.gameVersions.includes(minorVersion(minecraftVersion))))
+			.filter(file => file.gameVersions.includes("Fabric") && (file.gameVersions.includes(minecraftVersion) || file.gameVersions.includes(minorVersion(minecraftVersion))) && file.downloadUrl !== null)
 			.sort((a, b) => {
 				if(a.fileDate === b.fileDate) {
 					return 0;
