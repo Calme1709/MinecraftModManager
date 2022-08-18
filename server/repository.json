@@ -94,5 +94,65 @@
     "free-cam": {
         "type": 1,
         "id": "557076"
+    },
+    "reeses-sodium-options": {
+        "type": 1,
+        "id": 511319
+    },
+    "lambdynamiclights": {
+        "type": 1,
+        "id": 393442
+    },
+    "sodium-extra": {
+        "type": 1,
+        "id": 447673
+    },
+    "tooltipfix": {
+        "type": 1,
+        "id": 411557
+    },
+    "debugify": {
+        "type": 1,
+        "id": 596224
+    },
+    "mixin-conflict-helper": {
+        "type": 1,
+        "id": 643052
+    },
+    "modmenu": {
+        "type": 1,
+        "id": 308702
+    },
+    "continuity": {
+        "type": 1,
+        "id": 531351
+    },
+    "cull-less-leaves": {
+        "type": 1,
+        "id": 619718
+    },
+    "better-mount-hud": {
+        "type": 1,
+        "id": 475358
+    },
+    "enhanced-block-entities": {
+        "type": 1,
+        "id": 452046
+    },
+    "no-fade": {
+        "type": 1,
+        "id": 452768
+    },
+    "smooth-boot": {
+        "type": 1,
+        "id": 415758
+    },
+    "advancementinfo": {
+        "type": 1,
+        "id": 403815
+    },
+    "hold-that-chunk": {
+        "type": 1,
+        "id": 657481
     }
 }
