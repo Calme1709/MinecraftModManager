@@ -154,5 +154,29 @@
     "hold-that-chunk": {
         "type": 1,
         "id": 657481
+    },
+    "nofade": {
+        "type": 1,
+        "id": 452768
+    },
+    "smoothboot": {
+        "type": 1,
+        "id": "415758"
+    },
+    "freecam": {
+        "type": 1,
+        "id": 557076
+    },
+    "bettermounthud": {
+        "type": 1,
+        "id": 475358
+    },
+    "lambdynlights": {
+        "type": 1,
+        "id": 393442
+    },
+    "enhancedblockentities": {
+        "type": 1,
+        "id": 452046
     }
 }
