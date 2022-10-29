@@ -161,7 +161,7 @@
     },
     "smoothboot": {
         "type": 1,
-        "id": "415758"
+        "id": 415758
     },
     "freecam": {
         "type": 1,
@@ -178,5 +178,13 @@
     "enhancedblockentities": {
         "type": 1,
         "id": 452046
+    },
+    "yet-another-config-lib": {
+        "type": 1,
+        "id": 667299
+    },
+    "libipn": {
+        "type": 1,
+        "id": 679177
     }
 }
